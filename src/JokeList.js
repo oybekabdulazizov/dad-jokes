@@ -1,31 +1,44 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 
+const BASE_ENDPOINT = 'https://icanhazdadjoke.com/';
+
 class JokeList extends Component {
+  static defaultProps = {
+    numJokesToGet: 10,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      jokes: [
-        {
-          id: 't1nv2jr20dc',
-          joke: 'I used to be addicted to the hokey pokey, but I turned myself around.',
-        },
-        {
-          id: 'k2onmn1n22r',
-          joke: 'Some people say that comedians who tell one too many light bulb jokes soon burn out, but they do not know watt they are talking about. They are not that bright.',
-        },
-      ],
+      jokes: [],
     };
   }
 
+  async componentDidMount() {
+    let reqInstance = axios.create({
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    const jokes = [];
+    while (jokes.length < this.props.numJokesToGet) {
+      let res = await reqInstance.get(BASE_ENDPOINT);
+      jokes.push(res.data);
+    }
+    this.setState({ jokes: jokes });
+  }
+
   renderedJokes() {
-    return this.state.jokes.map((j) => <h3>{j.joke}</h3>);
+    return this.state.jokes.map((j) => <div>{j.joke}</div>);
   }
 
   render() {
     return (
-      <div>
+      <div className='JokeList'>
         <h1>Joke List</h1>
-        {this.renderedJokes()}
+        <div className='JokeList-jokes'>{this.renderedJokes()}</div>
       </div>
     );
   }
