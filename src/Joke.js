@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 const MAX_VOTE_NUM = 10;
 const MIN_VOTE_NUM = -10;
@@ -11,11 +13,11 @@ class Joke extends Component {
       <div>
         <div>
           <button onClick={this.props.upvote} disabled={upvoteDisabled}>
-            Upvote
+            <FontAwesomeIcon icon={faArrowUp} />
           </button>
           <span>{this.props.votes}</span>
           <button onClick={this.props.downvote} disabled={downvoteDisabled}>
-            Downvote
+            <FontAwesomeIcon icon={faArrowDown} />
           </button>
         </div>
         <div>{this.props.text}</div>
