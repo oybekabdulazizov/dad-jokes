@@ -28,7 +28,7 @@ class JokeList extends Component {
     if (this.state.jokes.length < 1) {
       while (jokes.length < this.props.numJokesToGet) {
         let res = await reqInstance.get(BASE_ENDPOINT);
-        jokes.push({ joke: res.data.joke, id: res.data.id, votes: 0 });
+        jokes.push({ text: res.data.joke, id: res.data.id, votes: 0 });
       }
       this.setState({ jokes: jokes });
     }
@@ -45,7 +45,7 @@ class JokeList extends Component {
   renderedJokes() {
     return this.state.jokes.map((j) => (
       <Joke
-        joke={j.joke}
+        text={j.text}
         id={j.id}
         votes={j.votes}
         upvote={() => this.handleVote(j.id, 1)}

@@ -5,24 +5,20 @@ const MIN_VOTE_NUM = -10;
 
 class Joke extends Component {
   render() {
+    let downvoteDisabled = this.props.votes === MIN_VOTE_NUM;
+    let upvoteDisabled = this.props.votes === MAX_VOTE_NUM;
     return (
       <div>
         <div>
-          <button
-            onClick={this.props.upvote}
-            disabled={this.props.votes === MAX_VOTE_NUM}
-          >
+          <button onClick={this.props.upvote} disabled={upvoteDisabled}>
             Upvote
           </button>
           <span>{this.props.votes}</span>
-          <button
-            onClick={this.props.downvote}
-            disabled={this.props.votes === MIN_VOTE_NUM}
-          >
+          <button onClick={this.props.downvote} disabled={downvoteDisabled}>
             Downvote
           </button>
         </div>
-        <div>{this.props.joke}</div>
+        <div>{this.props.text}</div>
       </div>
     );
   }
