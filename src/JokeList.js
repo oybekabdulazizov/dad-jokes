@@ -25,16 +25,32 @@ class JokeList extends Component {
     });
 
     const jokes = [];
-    while (jokes.length < this.props.numJokesToGet) {
-      let res = await reqInstance.get(BASE_ENDPOINT);
-      jokes.push({ joke: res.data.joke, id: res.data.id, votes: 0 });
+    if (this.state.jokes.length < 1) {
+      while (jokes.length < this.props.numJokesToGet) {
+        let res = await reqInstance.get(BASE_ENDPOINT);
+        jokes.push({ joke: res.data.joke, id: res.data.id, votes: 0 });
+      }
+      this.setState({ jokes: jokes });
     }
-    this.setState({ jokes: jokes });
+  }
+
+  handleVote(id, change) {
+    this.setState((currState) => ({
+      jokes: currState.jokes.map((j) =>
+        j.id === id ? { ...j, votes: j.votes + change } : j
+      ),
+    }));
   }
 
   renderedJokes() {
     return this.state.jokes.map((j) => (
-      <Joke joke={j.joke} id={j.id} votes={j.votes} />
+      <Joke
+        joke={j.joke}
+        id={j.id}
+        votes={j.votes}
+        upvote={() => this.handleVote(j.id, 1)}
+        downvote={() => this.handleVote(j.id, -1)}
+      />
     ));
   }
 
