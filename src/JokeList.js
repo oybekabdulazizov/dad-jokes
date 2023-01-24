@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import Joke from './Joke';
 import './JokeList.css';
 
 const BASE_ENDPOINT = 'https://icanhazdadjoke.com/';
@@ -26,13 +27,15 @@ class JokeList extends Component {
     const jokes = [];
     while (jokes.length < this.props.numJokesToGet) {
       let res = await reqInstance.get(BASE_ENDPOINT);
-      jokes.push(res.data);
+      jokes.push({ joke: res.data.joke, id: res.data.id, votes: 0 });
     }
     this.setState({ jokes: jokes });
   }
 
   renderedJokes() {
-    return this.state.jokes.map((j) => <div>{j.joke}</div>);
+    return this.state.jokes.map((j) => (
+      <Joke joke={j.joke} id={j.id} votes={j.votes} />
+    ));
   }
 
   render() {
