@@ -24,8 +24,8 @@ class Joke extends Component {
         <div className='Joke-text'>{this.props.text}</div>
         <div className='Joke-smiley'>
           <i
-            class='em em-laughing'
-            aria-role='presentation'
+            className='em em-laughing'
+            role='presentation'
             aria-label='SMILING FACE WITH OPEN MOUTH AND TIGHTLY-CLOSED EYES'
           ></i>
         </div>
