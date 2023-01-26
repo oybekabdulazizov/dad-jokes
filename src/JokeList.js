@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Joke from './Joke';
 import './JokeList.css';
 
-const BASE_ENDPOINT = 'https://icanhazdadjoke.com/';
+const BASE_ENDPOINT = 'https://icanhazdadjoloke.com/';
 
 class JokeList extends Component {
   static defaultProps = {
@@ -15,6 +15,7 @@ class JokeList extends Component {
     this.state = {
       jokes: JSON.parse(window.localStorage.getItem('jokes') || '[]'),
     };
+    this.fetchedJokesIDs = new Set(this.state.jokes.map((j) => j.id));
     this.handleLoadMoreJokes = this.handleLoadMoreJokes.bind(this);
   }
 
@@ -23,27 +24,27 @@ class JokeList extends Component {
   }
 
   async getJokes() {
-    console.log('inside getJokes function...');
-    let reqInstance = axios.create({
-      headers: {
-        Accept: 'application/json',
-      },
-    });
+    try {
+      const jokes = [];
+      while (jokes.length < this.props.numJokesToGet) {
+        let res = await axios.get(BASE_ENDPOINT, {
+          headers: { Accept: 'application/json' },
+        });
+        if (!this.fetchedJokesIDs.has(res.data.id)) {
+          jokes.push({ text: res.data.joke, id: res.data.id, votes: 0 });
+        }
+      }
 
-    const jokes = [];
-
-    while (jokes.length < this.props.numJokesToGet) {
-      let res = await reqInstance.get(BASE_ENDPOINT);
-      jokes.push({ text: res.data.joke, id: res.data.id, votes: 0 });
+      this.setState(
+        (currState) => ({
+          jokes: [...currState.jokes, ...jokes],
+        }),
+        () =>
+          window.localStorage.setItem('jokes', JSON.stringify(this.state.jokes))
+      );
+    } catch (e) {
+      alert(e);
     }
-
-    this.setState(
-      (currState) => ({
-        jokes: [...currState.jokes, ...jokes],
-      }),
-      () =>
-        window.localStorage.setItem('jokes', JSON.stringify(this.state.jokes))
-    );
   }
 
   handleVote(id, change) {
@@ -59,7 +60,6 @@ class JokeList extends Component {
   }
 
   handleLoadMoreJokes() {
-    console.log('inside the handleLoadMoreJokes function...');
     this.getJokes();
   }
 
@@ -83,13 +83,11 @@ class JokeList extends Component {
           <h1>
             <span>Dad</span> Jokes
           </h1>
-          <img src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg' />
-          <button onClick={this.handleLoadMoreJokes}>New Jokes</button>
           <img
             src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg'
             alt='JokeList-sidebar-laughing-emoji'
           />
-          <button>New Jokes</button>
+          <button onClick={this.handleLoadMoreJokes}>New Jokes</button>
         </div>
         <div className='JokeList-jokes'>{this.renderedJokes()}</div>
       </div>
