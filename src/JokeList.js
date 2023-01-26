@@ -2,8 +2,10 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import Joke from './Joke';
 import './JokeList.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFaceLaughBeam } from '@fortawesome/free-solid-svg-icons';
 
-const BASE_ENDPOINT = 'https://icanhazdadjoloke.com/';
+const BASE_ENDPOINT = 'https://icanhazdadjoke.com/';
 
 class JokeList extends Component {
   static defaultProps = {
@@ -14,6 +16,7 @@ class JokeList extends Component {
     super(props);
     this.state = {
       jokes: JSON.parse(window.localStorage.getItem('jokes') || '[]'),
+      loading: false,
     };
     this.fetchedJokesIDs = new Set(this.state.jokes.map((j) => j.id));
     this.handleLoadMoreJokes = this.handleLoadMoreJokes.bind(this);
@@ -37,6 +40,7 @@ class JokeList extends Component {
 
       this.setState(
         (currState) => ({
+          loading: false,
           jokes: [...currState.jokes, ...jokes],
         }),
         () =>
@@ -44,6 +48,7 @@ class JokeList extends Component {
       );
     } catch (e) {
       alert(e);
+      this.setState({ loading: false });
     }
   }
 
@@ -60,7 +65,7 @@ class JokeList extends Component {
   }
 
   handleLoadMoreJokes() {
-    this.getJokes();
+    this.setState({ loading: true }, this.getJokes);
   }
 
   renderedJokes() {
@@ -78,19 +83,30 @@ class JokeList extends Component {
 
   render() {
     return (
-      <div className='JokeList'>
-        <div className='JokeList-sidebar'>
-          <h1>
-            <span>Dad</span> Jokes
-          </h1>
-          <img
-            src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg'
-            alt='JokeList-sidebar-laughing-emoji'
-          />
-          <button onClick={this.handleLoadMoreJokes}>New Jokes</button>
-        </div>
-        <div className='JokeList-jokes'>{this.renderedJokes()}</div>
-      </div>
+      <>
+        {this.state.loading ? (
+          <div className='JokeList-spinner'>
+            <FontAwesomeIcon icon={faFaceLaughBeam} className='spinner' />
+            <h1>LOADING...</h1>
+          </div>
+        ) : (
+          <>
+            <div className='JokeList'>
+              <div className='JokeList-sidebar'>
+                <h1>
+                  <span>Dad</span> Jokes
+                </h1>
+                <img
+                  src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg'
+                  alt='JokeList-sidebar-laughing-emoji'
+                />
+                <button onClick={this.handleLoadMoreJokes}>New Jokes</button>
+              </div>
+              <div className='JokeList-jokes'>{this.renderedJokes()}</div>
+            </div>
+          </>
+        )}
+      </>
     );
   }
 }
