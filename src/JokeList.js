@@ -33,8 +33,10 @@ class JokeList extends Component {
         let res = await axios.get(BASE_ENDPOINT, {
           headers: { Accept: 'application/json' },
         });
-        if (!this.fetchedJokesIDs.has(res.data.id)) {
-          jokes.push({ text: res.data.joke, id: res.data.id, votes: 0 });
+        let newJoke = res.data;
+        if (!this.fetchedJokesIDs.has(newJoke.id)) {
+          jokes.push({ text: newJoke.joke, id: newJoke.id, votes: 0 });
+          this.fetchedJokesIDs.add(newJoke.id);
         }
       }
 
