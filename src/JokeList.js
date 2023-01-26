@@ -13,11 +13,15 @@ class JokeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      jokes: [],
+      jokes: JSON.parse(window.localStorage.getItem('jokes') || '[]'),
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    if (this.state.jokes.length === 0) this.getJokes();
+  }
+
+  async getJokes() {
     let reqInstance = axios.create({
       headers: {
         Accept: 'application/json',
@@ -30,7 +34,7 @@ class JokeList extends Component {
         let res = await reqInstance.get(BASE_ENDPOINT);
         jokes.push({ text: res.data.joke, id: res.data.id, votes: 0 });
       }
-      this.setState({ jokes: jokes });
+      window.localStorage.setItem('jokes', JSON.stringify(jokes));
     }
   }
 
@@ -40,6 +44,12 @@ class JokeList extends Component {
         j.id === id ? { ...j, votes: j.votes + change } : j
       ),
     }));
+  }
+
+  componentDidUpdate() {
+    const jokes = this.state.jokes;
+    window.localStorage.clear();
+    window.localStorage.setItem('jokes', JSON.stringify(jokes));
   }
 
   renderedJokes() {
