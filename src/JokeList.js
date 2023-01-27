@@ -24,6 +24,12 @@ class JokeList extends Component {
 
   componentDidMount() {
     if (this.state.jokes.length === 0) this.getJokes();
+
+    if (this.state.jokes.length > 0) {
+      this.setState((currState) => ({
+        jokes: currState.jokes.sort((a, b) => b.votes - a.votes),
+      }));
+    }
   }
 
   async getJokes() {
