@@ -108,7 +108,7 @@ class JokeList extends Component {
                   src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg'
                   alt='JokeList-sidebar-laughing-emoji'
                 />
-                <button onClick={this.handleLoadMoreJokes}>New Jokes</button>
+                <button onClick={this.handleLoadMoreJokes}>More Jokes</button>
               </div>
               <div className='JokeList-jokes'>{this.renderedJokes()}</div>
             </div>
