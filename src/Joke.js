@@ -68,7 +68,11 @@ class Joke extends Component {
     return (
       <div className='Joke'>
         <div className='Joke-voteline'>
-          <button onClick={this.props.upvote} disabled={upvoteDisabled}>
+          <button
+            onClick={this.props.upvote}
+            disabled={upvoteDisabled}
+            className='vote-btn upvote-btn'
+          >
             <FontAwesomeIcon icon={faArrowUp} />
           </button>
           <span
@@ -78,7 +82,11 @@ class Joke extends Component {
           >
             {this.props.votes}
           </span>
-          <button onClick={this.props.downvote} disabled={downvoteDisabled}>
+          <button
+            onClick={this.props.downvote}
+            disabled={downvoteDisabled}
+            className='vote-btn downvote-btn'
+          >
             <FontAwesomeIcon icon={faArrowDown} />
           </button>
         </div>

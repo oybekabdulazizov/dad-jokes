@@ -28,13 +28,53 @@
   box-shadow: 0 10px 38px rgba(0, 0, 0, 0.2), 0 10px 12px rgba(0, 0, 0, 0.2);
 }
 
-.Joke-voteline button {
+.vote-btn {
   font-size: 1.5rem;
   margin: 0.6rem;
   cursor: pointer;
   background: inherit;
   border: none;
   color: #787878;
+  transition: all 0.3s;
+}
+
+.upvote-btn:hover {
+  animation: move-up 0.7s ease-out;
+  color: green;
+}
+
+@keyframes move-up {
+  0%,
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+  25%,
+  75% {
+    transform: translateY(-3px);
+  }
+}
+
+.downvote-btn:hover {
+  animation: move-down 0.7s ease-out;
+  color: red;
+}
+
+@keyframes move-down {
+  0%,
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+  25%,
+  75% {
+    transform: translateY(3px);
+  }
+}
+
+.vote-btn[disabled] {
+  color: lightgray;
+  cursor: not-allowed;
 }
 
 .Joke-text {
